@@ -1,0 +1,245 @@
+//
+//  HomeViewController.swift
+//  MovieBase
+//
+//  Created by Bakhtovar on 05/07/23.
+//
+
+import UIKit
+
+
+import UIKit
+import SnapKit
+//import SkeletonView
+
+enum Sections: Int {
+    case Popular = 0
+    case NowPlaying = 1
+    case Upcoming = 2
+}
+
+protocol SectionDelegate: AnyObject {
+    func didSelectSection(_ section: Int)
+}
+
+class HomeViewController: UIViewController {
+    
+    // MARK: - Data Layer
+    var expandedViewController: ExpandedViewController?
+    weak var delegate: SectionDelegate?
+    private var randomTrendingMovies: Title?
+    private var headerView: HeaderUIView?
+    let sectionsTitle: [String] = ["Popular", "Now Playing ", "Upcoming"]
+    
+    
+    // MARK: - UI
+    private lazy var homeFeedTable: UITableView = {
+        let homeFeedTable = UITableView(frame: .zero, style: .grouped)
+        homeFeedTable.register(MoviesTableViewCell.self, forCellReuseIdentifier: MoviesTableViewCell.nameOfClass)
+        homeFeedTable.delegate = self
+        homeFeedTable.dataSource = self
+        headerView = HeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 500))
+        homeFeedTable.tableHeaderView = headerView
+        return homeFeedTable
+    }()
+    
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        addSubViews()
+        makeConstraints()
+        getNowPlayingMovies()
+        configureHeaderUIView()
+    }
+    
+    // MARK: - Constraints
+    private func makeConstraints() {
+        homeFeedTable.snp.makeConstraints { make in
+            make.size.equalToSuperview()
+        }
+    }
+    
+    // MARK: - Private
+    private func addSubViews() {
+        view.addSubview(homeFeedTable)
+    }
+    
+    
+    private func getNowPlayingMovies() {
+        APICaller.shared.getNowPlayingMovies { results in
+            switch results {
+            case .success(let movies):
+                print(movies)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    private func configureHeaderUIView() {
+        APICaller.shared.getNowPlayingMovies { [weak self] result in
+            switch result {
+            case .success(let titles):
+                DispatchQueue.main.async {
+                    let selectedTitle = titles.randomElement()
+                    self?.randomTrendingMovies = selectedTitle
+                    let titleViewModel = TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? "")
+                   // self?.headerView?.configure(with: TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? ""))
+                    self?.headerView?.configure(with: titleViewModel)
+                   
+                    
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    //    private func configureHeaderUIView() {
+    //        APICaller.shared.getNowPlayingMovies { [weak self] result in
+    //            switch result {
+    //            case .success(let titles):
+    //                DispatchQueue.main.async {
+    //                    let titleViewModels = titles.map { TitleViewModel(titleName: $0.original_title ?? "", posterURL: $0.poster_path ?? "") }
+    //                    let photosModel = PhotosModel(photos: titleViewModels)
+    //                    self?.headerView?.urlPhotos = [photosModel]
+    //                    self?.headerView?.configure(with: titleViewModels)
+    //                }
+    //            case .failure(let error):
+    //                print(error.localizedDescription)
+    //            }
+    //        }
+    //    }
+}
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.nameOfClass) as? MoviesTableViewCell else {
+                return UITableViewCell()
+            }
+            
+            switch indexPath.section {
+            case Sections.NowPlaying.rawValue:
+                APICaller.shared.getNowPlayingMovies { result in
+                    switch result {
+                    case .success(let titles):
+                        cell.configure(with: titles)
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
+                
+            case Sections.Popular.rawValue:
+                APICaller.shared.getPopularMovies { result in
+                    switch result {
+                    case .success(let titles):
+                        cell.configure(with: titles)
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
+                
+            case Sections.Upcoming.rawValue:
+                
+                APICaller.shared.getUpcomingMovies { result in
+                    switch result {
+                    case .success(let titles):
+                        cell.configure(with: titles)
+                        print(result)
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                }
+                
+            default:
+                return UITableViewCell()
+            }
+            
+            return cell
+        }
+        
+        
+        func numberOfSections(in tableView: UITableView) -> Int {
+            sectionsTitle.count
+        }
+        
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+            1
+        }
+        
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            200
+        }
+        
+        func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+            40
+        }
+        
+        func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+            guard let header = view as? UITableViewHeaderFooterView else { return }
+            
+            let sectionTitle = sectionsTitle[section]
+            let moviesText = "MOVIES"
+            let separatorText = " | "
+            
+            let attributedText = NSMutableAttributedString()
+            let sectionTitleAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 18, weight: .semibold),
+                .foregroundColor: UIColor.white
+            ]
+            let moviesAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 14, weight: .regular),
+                .foregroundColor: UIColor.gray.withAlphaComponent(0.7)
+            ]
+            let separatorAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 14, weight: .regular),
+                .foregroundColor: UIColor.gray.withAlphaComponent(0.7)
+            ]
+            
+            attributedText.append(NSAttributedString(string: sectionTitle, attributes: sectionTitleAttributes))
+            attributedText.append(NSAttributedString(string: separatorText, attributes: separatorAttributes))
+            attributedText.append(NSAttributedString(string: moviesText, attributes: moviesAttributes))
+            
+            header.textLabel?.attributedText = attributedText
+            
+            // Add arrow button
+            let arrowButton = UIButton(type: .custom)
+            arrowButton.setImage(UIImage(systemName: "arrow.right"), for: .normal)
+            arrowButton.addTarget(self, action: #selector(arrowButtonTapped(_:)), for: .touchUpInside)
+            arrowButton.tag = section // Set the tag to identify the section
+            header.contentView.addSubview(arrowButton)
+            
+            // Add constraints for the arrow button using SnapKit
+            arrowButton.snp.makeConstraints { make in
+                make.trailing.equalTo(header.contentView).offset(-16)
+                make.centerY.equalTo(header.contentView)
+                make.width.equalTo(20)
+                make.height.equalTo(20)
+                
+                // Instantiate the ExpandedViewControlle
+            }
+        }
+
+    @objc private func arrowButtonTapped(_ sender: UIButton) {
+        let section = sender.tag // Get the section from the tag
+        print(section)
+        print("section is above")
+        delegate?.didSelectSection(section)
+        
+        let expandedViewController = ExpandedViewController()
+        expandedViewController.section = section
+        
+        
+    }
+        
+        func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+            return sectionsTitle[section]
+        }
+        
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            let defaultOffset = view.safeAreaInsets.top
+            let offset = scrollView.contentOffset.y + defaultOffset
+            
+            navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
+        }
+    }

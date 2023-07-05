@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "4D78225F-AF04-4A54-9951-7733E6C880F2"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EFAB20DA-C5A9-4C75-AF40-7ACB512087CC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieBase/View/HomeViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "configureHeaderUIView()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "EFAB20DA-C5A9-4C75-AF40-7ACB512087CC - 1a9bb0e1c9d84dea"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;MovieBase.Title&gt;, Swift.Error&gt;) -&gt; () in MovieBase.HomeViewController.configureHeaderUIView() -&gt; ()"
+                  moduleName = "MovieBase"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mac/Documents/Developer/megafon/MovieBase/MovieBase/View/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "80"
+                  endingLineNumber = "80"
+                  offsetFromSymbolStart = "240">
+               </Location>
+               <Location
+                  uuid = "EFAB20DA-C5A9-4C75-AF40-7ACB512087CC - 1a9bb0e1c9d84dea"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;MovieBase.Title&gt;, Swift.Error&gt;) -&gt; () in MovieBase.HomeViewController.configureHeaderUIView() -&gt; ()"
+                  moduleName = "MovieBase"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mac/Documents/Developer/megafon/MovieBase/MovieBase/View/HomeViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "80"
+                  endingLineNumber = "80"
+                  offsetFromSymbolStart = "514">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
