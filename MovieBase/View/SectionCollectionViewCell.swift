@@ -10,10 +10,22 @@ import UIKit
 class SectionCollectionViewCell: UICollectionViewCell {
     
     // MARK: - UI
-    private let posterImageView: UIImageView = {
+    private lazy var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
+    }()
+    
+    lazy var averageLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textAlignment = .center
+        label.layer.cornerRadius = 5
+        label.layer.masksToBounds = true
+        label.layer.cornerCurve = .continuous
+        return label
     }()
     
     // MARK: - Inits
@@ -41,6 +53,15 @@ class SectionCollectionViewCell: UICollectionViewCell {
             return
         }
         posterImageView.sd_setImage(with: url, completed: nil)
+        
+        
+    }
+    
+    // MARK: - Private
+    private func addSubviews() {
+        contentView.addSubview(posterImageView)
+        contentView.addSubview(averageLabel)
+        
     }
     
     // MARK: - Constraints
@@ -48,11 +69,13 @@ class SectionCollectionViewCell: UICollectionViewCell {
         posterImageView.snp.updateConstraints() { make in
             make.size.equalToSuperview()
         }
+        
+        averageLabel.snp.makeConstraints { make in
+              make.top.equalToSuperview().offset(8)
+              make.trailing.equalToSuperview().offset(-8)
+              make.width.equalTo(25)
+          }
+        
         super.updateConstraints()
-    }
-    
-    // MARK: - Private
-    private func addSubviews() {
-        contentView.addSubview(posterImageView)
     }
 }

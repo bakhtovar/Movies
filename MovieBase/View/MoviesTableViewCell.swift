@@ -69,6 +69,7 @@ extension MoviesTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
         }
         cell.configure(with: model)
         
+        cell.averageLabel.text = String(describing: titles[indexPath.row].vote_average)
         return cell
     }
     
@@ -78,6 +79,4 @@ extension MoviesTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
        return titles.count
        
     }
-    
-    
 }

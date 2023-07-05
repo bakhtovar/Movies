@@ -77,6 +77,25 @@ class HomeViewController: UIViewController {
         }
     }
     
+//    private func configureHeaderUIView() {
+//        APICaller.shared.getNowPlayingMovies { [weak self] result in
+//            switch result {
+//            case .success(let titles):
+//                DispatchQueue.main.async {
+//                    let selectedTitle = titles.randomElement()
+//                    self?.randomTrendingMovies = selectedTitle
+//                    let titleViewModel = TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? "")
+//                   // self?.headerView?.configure(with: TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? ""))
+//                    self?.headerView?.configure(with: titleViewModel)
+//
+//
+//                }
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        }
+//    }
+    
     private func configureHeaderUIView() {
         APICaller.shared.getNowPlayingMovies { [weak self] result in
             switch result {
@@ -84,17 +103,17 @@ class HomeViewController: UIViewController {
                 DispatchQueue.main.async {
                     let selectedTitle = titles.randomElement()
                     self?.randomTrendingMovies = selectedTitle
-                    let titleViewModel = TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? "")
-                   // self?.headerView?.configure(with: TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? ""))
-                    self?.headerView?.configure(with: titleViewModel)
-                   
                     
+                    let title = Title(id: selectedTitle?.id ?? 0, media_type: selectedTitle?.media_type, original_name: selectedTitle?.original_name, original_title: selectedTitle?.original_title, poster_path: selectedTitle?.poster_path, overview: selectedTitle?.overview, vote_count: selectedTitle?.vote_count ?? 0, release_date: selectedTitle?.release_date, vote_average: selectedTitle?.vote_average ?? 0.0)
+                    
+                    self?.headerView?.configure(with: [title])
                 }
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
     }
+
     
     //    private func configureHeaderUIView() {
     //        APICaller.shared.getNowPlayingMovies { [weak self] result in
