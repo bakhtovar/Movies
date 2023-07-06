@@ -1,27 +1,30 @@
 //
-//  SliderCollectionViewCell.swift
+//  ExpandCollectionViewCell.swift
 //  MovieBase
 //
-//  Created by Bakhtovar on 05/07/23.
+//  Created by Bakhtovar on 06/07/23.
 //
 
 import UIKit
+import SnapKit
+import SDWebImage
+import Kingfisher
 
-class SliderCollectionViewCell: UICollectionViewCell {
+class ExpandCollectionViewCell: UICollectionViewCell {
     
+    // MARK: - Data Layer
+    public var titles: [Title] = [Title]()
+        
     // MARK: - UI
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-    
+     
     // MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .green
-        setNeedsUpdateConstraints()
-        setupUI()
         addSubviews()
         setNeedsUpdateConstraints()
     }
@@ -29,19 +32,18 @@ class SliderCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError()
     }
-    
-    private func setupUI() {
-        contentView.layer.cornerRadius = 10
-        contentView.layer.masksToBounds = true
-        contentView.layer.cornerCurve = .continuous
-    }
-    
+   
     public func configure(with model: String) {
         guard let url = URL(string: "https://image.tmdb.org/t/p/w500/\(model)") else {
             return
         }
         posterImageView.sd_setImage(with: url, completed: nil)
     }
+    
+//    public func configure(with titles:[Title]) {
+//        self.titles = titles
+//        
+//        }
     
     // MARK: - Constraints
     override func updateConstraints() {

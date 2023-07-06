@@ -54,7 +54,6 @@ class SectionCollectionViewCell: UICollectionViewCell {
         }
         posterImageView.sd_setImage(with: url, completed: nil)
         
-        
     }
     
     // MARK: - Private

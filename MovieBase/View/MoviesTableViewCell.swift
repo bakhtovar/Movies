@@ -39,8 +39,8 @@ class MoviesTableViewCell: UITableViewCell {
         self.titles = titles
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {[weak self] in
                 self?.collectionView.reloadData()
-                }
             }
+        }
     
     // MARK: - Private
     private func addSubviews() {
@@ -68,7 +68,6 @@ extension MoviesTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
             return UICollectionViewCell()
         }
         cell.configure(with: model)
-        
         cell.averageLabel.text = String(describing: titles[indexPath.row].vote_average)
         return cell
     }

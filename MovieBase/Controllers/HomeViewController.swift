@@ -131,6 +131,7 @@ class HomeViewController: UIViewController {
     //        }
     //    }
 }
+
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.nameOfClass) as? MoviesTableViewCell else {
@@ -245,10 +246,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         print("section is above")
         delegate?.didSelectSection(section)
         
-        let expandedViewController = ExpandedViewController()
-        expandedViewController.section = section
-        
-        
+        let expandedViewController = ExpandedViewController()        
+        navigationController?.pushViewController(expandedViewController, animated: true)
+     
     }
         
         func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

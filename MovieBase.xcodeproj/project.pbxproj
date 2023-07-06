@@ -28,6 +28,7 @@
 		0413C94F2A557C7C0030081C /* SectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C94E2A557C7C0030081C /* SectionCollectionViewCell.swift */; };
 		0413C9512A5588BC0030081C /* SliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C9502A5588BC0030081C /* SliderCollectionViewCell.swift */; };
 		0413C9552A5599CF0030081C /* ExpandedMoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C9542A5599CF0030081C /* ExpandedMoviesViewController.swift */; };
+		0413C9572A5691C70030081C /* ExpandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C9562A5691C70030081C /* ExpandCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		0413C94E2A557C7C0030081C /* SectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		0413C9502A5588BC0030081C /* SliderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderCollectionViewCell.swift; sourceTree = "<group>"; };
 		0413C9542A5599CF0030081C /* ExpandedMoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedMoviesViewController.swift; sourceTree = "<group>"; };
+		0413C9562A5691C70030081C /* ExpandCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				0413C9342A5541300030081C /* HeaderUIView.swift */,
 				0413C9462A55520C0030081C /* MoviesTableViewCell.swift */,
 				0413C9502A5588BC0030081C /* SliderCollectionViewCell.swift */,
+				0413C9562A5691C70030081C /* ExpandCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0413C9572A5691C70030081C /* ExpandCollectionViewCell.swift in Sources */,
 				0413C9332A553DDC0030081C /* FavouritesViewController.swift in Sources */,
 				0413C92E2A553D0C0030081C /* HomeViewController.swift in Sources */,
 				0413C9162A5537220030081C /* MainTabViewController.swift in Sources */,
