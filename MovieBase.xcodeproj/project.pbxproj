@@ -29,6 +29,7 @@
 		0413C9512A5588BC0030081C /* SliderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C9502A5588BC0030081C /* SliderCollectionViewCell.swift */; };
 		0413C9552A5599CF0030081C /* ExpandedMoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C9542A5599CF0030081C /* ExpandedMoviesViewController.swift */; };
 		0413C9572A5691C70030081C /* ExpandCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C9562A5691C70030081C /* ExpandCollectionViewCell.swift */; };
+		0413C9592A56D9350030081C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C9582A56D9350030081C /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		0413C9502A5588BC0030081C /* SliderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderCollectionViewCell.swift; sourceTree = "<group>"; };
 		0413C9542A5599CF0030081C /* ExpandedMoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedMoviesViewController.swift; sourceTree = "<group>"; };
 		0413C9562A5691C70030081C /* ExpandCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandCollectionViewCell.swift; sourceTree = "<group>"; };
+		0413C9582A56D9350030081C /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +157,7 @@
 				0413C9152A5537220030081C /* MainTabViewController.swift */,
 				0413C92D2A553D0C0030081C /* HomeViewController.swift */,
 				0413C9322A553DDC0030081C /* FavouritesViewController.swift */,
+				0413C9582A56D9350030081C /* DetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0413C9572A5691C70030081C /* ExpandCollectionViewCell.swift in Sources */,
+				0413C9592A56D9350030081C /* DetailViewController.swift in Sources */,
 				0413C9332A553DDC0030081C /* FavouritesViewController.swift in Sources */,
 				0413C92E2A553D0C0030081C /* HomeViewController.swift in Sources */,
 				0413C9162A5537220030081C /* MainTabViewController.swift in Sources */,

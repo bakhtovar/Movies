@@ -141,6 +141,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             
+            cell.didSelectItem = { [weak self] selectedMovie in
+                let detailViewController = DetailViewController()
+                detailViewController.configure(with: selectedMovie)
+                self?.navigationController?.pushViewController(detailViewController, animated: true)
+            }
+            
             switch indexPath.section {
             case Sections.NowPlaying.rawValue:
                 APICaller.shared.getNowPlayingMovies { result in
@@ -228,6 +234,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             let arrowButton = UIButton(type: .custom)
             arrowButton.setImage(UIImage(systemName: "arrow.right"), for: .normal)
             arrowButton.addTarget(self, action: #selector(arrowButtonTapped(_:)), for: .touchUpInside)
+            arrowButton.tintColor = UIColor.gray.withAlphaComponent(0.7)
             arrowButton.tag = section // Set the tag to identify the section
             header.contentView.addSubview(arrowButton)
             
@@ -272,3 +279,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
         }
     }
+
+//extension HomeViewController: CollectionViewTableViewCellDelegate {
+//    func collectionViewTableViewCellDidTapCell(_ cell: MoviesTableViewCell) {
+//        DispatchQueue.main.async { [weak self] in
+//            let vc = ExpandedViewController()
+//            self?.navigationController?.pushViewController(vc, animated: true)
+//        }
+//    }
+//}
