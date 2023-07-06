@@ -51,6 +51,9 @@ class HomeViewController: UIViewController {
         makeConstraints()
         getNowPlayingMovies()
         configureHeaderUIView()
+        
+//        expandedViewController = ExpandedViewController()
+//        expandedViewController?.delegate = self
     }
     
     // MARK: - Constraints
@@ -165,7 +168,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     switch result {
                     case .success(let titles):
                         cell.configure(with: titles)
-                        print(result)
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
@@ -240,16 +242,24 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
 
+//    @objc private func arrowButtonTapped(_ sender: UIButton) {
+//        let section = sender.tag // Get the section from the tag
+//        let expandedViewController = ExpandedViewController()
+//        expandedViewController.index = section
+//        navigationController?.pushViewController(expandedViewController, animated: true)  
+//    }
+    
     @objc private func arrowButtonTapped(_ sender: UIButton) {
         let section = sender.tag // Get the section from the tag
-        print(section)
-        print("section is above")
-        delegate?.didSelectSection(section)
+        let expandedViewController = ExpandedViewController()
+        expandedViewController.index = section
         
-        let expandedViewController = ExpandedViewController()        
-        navigationController?.pushViewController(expandedViewController, animated: true)
-     
+        let navigationController = UINavigationController(rootViewController: expandedViewController)
+        navigationController.modalPresentationStyle = .fullScreen // Present the navigation controller in full screen
+        
+        present(navigationController, animated: true, completion: nil)
     }
+
         
         func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
             return sectionsTitle[section]

@@ -7,18 +7,14 @@
 
 import UIKit
 
-import UIKit
-
-class ExpandedViewController: UIViewController, SectionDelegate {
+class ExpandedViewController: UIViewController {
    
     private let movies: [Title] = []
+    let sectionsTitle: [String] = ["getPopularMovies", "getNowPlayingMovies", "getUpcomingMovies"]
+    let titleName: [String] = ["Popular", "Now Playing ", "Upcoming"]
     
     var index: Int = 0
-    
-    func didSelectSection(_ section: Int) {
-        index = section
-    }
-    
+
     //MARK: - Data Layer
     public var titles: [Title] = [Title]()
         
@@ -39,31 +35,15 @@ class ExpandedViewController: UIViewController, SectionDelegate {
         super.viewDidLoad()
         view.backgroundColor = .red
         view.addSubview(expandCollectionView)
-        makeConstraints()
         addBackButton()
-        
-        func didSelectSection(_ section: Int) {
-            print(section)
-            print("received section")
-            index = section
-        }
-        
-        fetchMovies(flag: "getPopularMovies")
+        makeConstraints()
+
+        if index >= 0 && index < sectionsTitle.count {
+            let flag = sectionsTitle[index].trimmingCharacters(in: .whitespaces)
+                fetchMovies(flag: flag)
+            title = titleName[index]
+            }
     }
-    
-//    private func fetchMovies() {
-//        APICaller.shared.getNowPlayingMovies { [weak self] result in
-//            switch result {
-//            case .success(let titles):
-//                self?.titles = titles
-//                DispatchQueue.main.async {
-//                    self?.expandCollectionView.reloadData()
-//                }
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
-//    }
     
     private func fetchMovies(flag: String) {
         switch flag {
@@ -79,7 +59,6 @@ class ExpandedViewController: UIViewController, SectionDelegate {
             APICaller.shared.getUpcomingMovies { [weak self] result in
                 self?.handleAPICallResult(result, for: self)
             }
-            
         default:
             print("Invalid flag")
         }
@@ -108,18 +87,20 @@ class ExpandedViewController: UIViewController, SectionDelegate {
     private func addBackButton() {
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = backButton
-        backButton.tintColor = .red
+        backButton.tintColor = .yellow
+       
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
     }
 
     @objc private func backButtonTapped() {
-        navigationController?.popViewController(animated: true)
+        navigationController?.dismiss(animated: true, completion: nil)
     }
+    
 }
 
 extension ExpandedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(titles.count)
-        print("expanded")
         return titles.count
     }
     

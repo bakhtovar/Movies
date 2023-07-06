@@ -25,7 +25,7 @@ class MoviesTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .red
+        contentView.backgroundColor = .systemBackground
         addSubviews()
         
     }
@@ -73,8 +73,6 @@ extension MoviesTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("count")
-        print(titles.count)
        return titles.count
        
     }
