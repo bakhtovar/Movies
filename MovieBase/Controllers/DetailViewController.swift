@@ -1,20 +1,29 @@
+//
+//  DetailViewController.swift
+//  MovieBase
+//
+//  Created by Bakhtovar on 05/07/23.
+//
+
+
 import UIKit
 import SnapKit
 import SDWebImage
 
 class DetailViewController: UIViewController {
     
-    lazy var shadowView: UIView = {
+    // MARK: - UI
+    
+    private lazy var shadowView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 1
         view.layer.shadowOffset = CGSize.zero
-        //view.layer.shadowRadius = 4
         return view
     }()
     
-    lazy var backgroundImageView: UIImageView = {
+    private lazy var backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -22,14 +31,14 @@ class DetailViewController: UIViewController {
         return imageView
     }()
     
-    lazy var movieImageView: UIImageView = {
+    private lazy var movieImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "WebView") // Replace with your own image name
         return imageView
     }()
     
-    lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textColor = .white
@@ -37,22 +46,14 @@ class DetailViewController: UIViewController {
         return label
     }()
     
-    lazy var releaseDateLabel: UILabel = {
+    private lazy var releaseDateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .white
         return label
     }()
     
-    lazy var averageRatingLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .white
-        label.text = "Average Rating: 4.5" // Replace with the actual average rating
-        return label
-    }()
-    
-    lazy var descriptionLabel: UILabel = {
+    private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor.white.withAlphaComponent(0.7)
@@ -68,37 +69,38 @@ class DetailViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
         return view
     }()
-
+    
     private lazy var backButton: UIButton = {
         let button = UIButton()
-        //button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
         button.setBackgroundImage(UIImage(systemName: "arrow.left"), for: .normal)
         button.tintColor = .yellow
         button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         return button
     }()
-
+    
+    // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addSubviews()
-        makeConstraints()
-       // configureNavigationBar()
-        addBackButton()
+        setupViews()
+        setupConstraints()
+        configureNavigationBar()
     }
     
-    //MARK: - Private
-    private func addSubviews() {
+    // MARK: - Private Methods
+    
+    private func setupViews() {
         view.addSubview(backgroundImageView)
         backgroundImageView.addSubview(shadowView)
         view.addSubview(movieImageView)
         view.addSubview(titleLabel)
         view.addSubview(releaseDateLabel)
-        view.addSubview(averageRatingLabel)
         view.addSubview(descriptionLabel)
+        view.addSubview(backButtonView)
+        backButtonView.addSubview(backButton)
     }
     
-    private func makeConstraints() {
+    private func setupConstraints() {
         backgroundImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(250)
@@ -132,58 +134,32 @@ class DetailViewController: UIViewController {
             make.trailing.equalToSuperview().inset(20)
         }
         
-    }
-//
-//    private func configureNavigationBar() {
-//        navigationController?.navigationBar.tintColor = .yellow
-//        navigationController?.navigationBar.topItem?.title = ""
-//    }
-    
-    private func configureNavigationBar() {
-        navigationController?.navigationBar.tintColor = .yellow
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.backIndicatorImage = UIImage() // Hide the default back button image
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage() // Hide the default back button image
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButtonView)
-    }
-    
-//
-//    private func addBackButton() {
-//         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
-//         navigationItem.leftBarButtonItem = backButton
-//         backButton.tintColor = .yellow
-//
-//         navigationController?.navigationBar.tintColor = .white
-//         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-//     }
-//
-     @objc private func backButtonTapped() {
-         navigationController?.popViewController(animated: true)
-     }
-    
-    private func addBackButton() {
-        
-        navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-        //navigationItem.hidesBackButton = true
-        
-        view.addSubview(backButtonView)
         backButtonView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(40)
             make.left.equalToSuperview().offset(10)
-            make.width.height.equalTo(50) // Set the width and height of the backButtonView to 100
+            make.width.height.equalTo(50)
         }
-        backButtonView.addSubview(backButton)
+        
         backButton.snp.makeConstraints { make in
-            //make.center.equalToSuperview()
             make.leading.top.equalToSuperview().offset(10)
             make.width.height.equalTo(25)
         }
-        backButton.imageView?.contentMode = .scaleAspectFill // Ensure the button's content scales properly
     }
     
+    private func configureNavigationBar() {
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+    }
+    
+    // MARK: - Button Actions
+    
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    // MARK: - Public Methods
+
     public func configure(with model: Title) {
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
