@@ -40,6 +40,7 @@ class SliderCollectionViewCell: UICollectionViewCell {
         guard let url = URL(string: "https://image.tmdb.org/t/p/w500/\(model)") else {
             return
         }
+    
         posterImageView.sd_setImage(with: url, completed: nil)
     }
     

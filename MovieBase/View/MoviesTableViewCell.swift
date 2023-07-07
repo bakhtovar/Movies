@@ -97,7 +97,8 @@ import SnapKit
 class MoviesTableViewCell: UITableViewCell {
     
     weak var navigationController: UINavigationController?
-    private var titles: [Title] = []
+    
+    private var titles: [Title] = [Title]()
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -134,6 +135,18 @@ class MoviesTableViewCell: UITableViewCell {
         contentView.addSubview(collectionView)
     }
     
+    private func downloadTitleAt(indexPath: IndexPath) {
+        
+        DataPersistenceManager.shared.downloadMovieWith(model: titles[indexPath.row]) { result in
+            switch result {
+            case .success():
+            NotificationCenter.default.post(name: NSNotification.Name("downloaded"), object: nil)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     private func setupConstraints() {
         collectionView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -167,5 +180,18 @@ extension MoviesTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
         
         didSelectItem?(selectedMovie)
         
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+        let config = UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: nil) {[weak self] _ in
+                let downloadAction = UIAction(title: "Download", subtitle: nil, image: nil, identifier: nil, discoverabilityTitle: nil, state: .off) { _ in
+                    self?.downloadTitleAt(indexPath: indexPath)
+                }
+                return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [downloadAction])
+            }
+        return config
     }
 }
