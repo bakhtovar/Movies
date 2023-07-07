@@ -36,6 +36,11 @@ class FavouritesViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        title = "Favourites"
+    }
+    
     // MARK: - Constraints
     private func makeConstraints() {
         favouritesTable.snp.makeConstraints { make in
@@ -63,23 +68,23 @@ extension FavouritesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return titles.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: FavouriteTableCell.nameOfClass, for: indexPath) as? FavouriteTableCell else {
             return UITableViewCell()
         }
-
+        
         let title = titles[indexPath.row]
         let model = TitleViewModel(titleName: title.original_name ?? title.original_title ?? "" , posterURL: title.poster_path ?? "")
         cell.configure(with: model)
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 140
     }
-
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         switch editingStyle {
         case .delete:
@@ -96,6 +101,15 @@ extension FavouritesViewController: UITableViewDelegate, UITableViewDataSource {
         default:
             break;
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedMovie = titles[indexPath.row]
+        let detailViewController = DetailViewController()
+        detailViewController.configureMovie(with: selectedMovie)
+        detailViewController.status = 1
+        self.navigationController?.pushViewController(detailViewController, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

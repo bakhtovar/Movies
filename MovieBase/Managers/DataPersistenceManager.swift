@@ -37,6 +37,7 @@ class DataPersistenceManager {
         item.original_name = model.original_name
         item.vote_count = Int64(model.vote_count)
         item.vote_average = model.vote_average
+        item.release_date = model.release_date
         
         do {
             try context.save()

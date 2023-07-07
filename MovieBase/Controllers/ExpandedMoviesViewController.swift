@@ -114,4 +114,12 @@ extension ExpandedViewController: UICollectionViewDelegate, UICollectionViewData
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let detailViewController = DetailViewController()
+        let selectedMovie = titles[indexPath.row]
+        
+        detailViewController.configureTitle(with: selectedMovie)
+        navigationController?.pushViewController(detailViewController, animated: true)
+    }
 }
