@@ -141,12 +141,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             
-            cell.didSelectItem = { [weak self] selectedMovie in
-                let detailViewController = DetailViewController()
-                detailViewController.configure(with: selectedMovie)
-                self?.navigationController?.pushViewController(detailViewController, animated: true)
-            }
-            
             switch indexPath.section {
             case Sections.NowPlaying.rawValue:
                 APICaller.shared.getNowPlayingMovies { result in
@@ -181,6 +175,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 
             default:
                 return UITableViewCell()
+            }
+            
+            cell.didSelectItem = { [weak self] selectedMovie in
+                let detailViewController = DetailViewController()
+                detailViewController.configure(with: selectedMovie)
+                self?.navigationController?.pushViewController(detailViewController, animated: true)
             }
             
             return cell

@@ -3,6 +3,17 @@ import SnapKit
 import SDWebImage
 
 class DetailViewController: UIViewController {
+    
+    lazy var shadowView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 1
+        view.layer.shadowOffset = CGSize.zero
+        //view.layer.shadowRadius = 4
+        return view
+    }()
+    
     lazy var backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -44,21 +55,42 @@ class DetailViewController: UIViewController {
     lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .white
+        label.textColor = UIColor.white.withAlphaComponent(0.7)
         label.numberOfLines = 0
         label.text = "Movie description goes here" // Replace with the actual movie description
         return label
     }()
     
+    private lazy var backButtonView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backButtonTapped))
+        view.addGestureRecognizer(tapGesture)
+        return view
+    }()
+
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        //button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        button.setBackgroundImage(UIImage(systemName: "arrow.left"), for: .normal)
+        button.tintColor = .yellow
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
         makeConstraints()
+       // configureNavigationBar()
+        addBackButton()
     }
     
     //MARK: - Private
     private func addSubviews() {
         view.addSubview(backgroundImageView)
+        backgroundImageView.addSubview(shadowView)
         view.addSubview(movieImageView)
         view.addSubview(titleLabel)
         view.addSubview(releaseDateLabel)
@@ -70,6 +102,11 @@ class DetailViewController: UIViewController {
         backgroundImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(250)
+        }
+        
+        shadowView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(73)
         }
         
         movieImageView.snp.makeConstraints { make in
@@ -94,6 +131,57 @@ class DetailViewController: UIViewController {
             make.leading.equalTo(movieImageView)
             make.trailing.equalToSuperview().inset(20)
         }
+        
+    }
+//
+//    private func configureNavigationBar() {
+//        navigationController?.navigationBar.tintColor = .yellow
+//        navigationController?.navigationBar.topItem?.title = ""
+//    }
+    
+    private func configureNavigationBar() {
+        navigationController?.navigationBar.tintColor = .yellow
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.backIndicatorImage = UIImage() // Hide the default back button image
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage() // Hide the default back button image
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButtonView)
+    }
+    
+//
+//    private func addBackButton() {
+//         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
+//         navigationItem.leftBarButtonItem = backButton
+//         backButton.tintColor = .yellow
+//
+//         navigationController?.navigationBar.tintColor = .white
+//         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+//     }
+//
+     @objc private func backButtonTapped() {
+         navigationController?.popViewController(animated: true)
+     }
+    
+    private func addBackButton() {
+        
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        //navigationItem.hidesBackButton = true
+        
+        view.addSubview(backButtonView)
+        backButtonView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(40)
+            make.left.equalToSuperview().offset(10)
+            make.width.height.equalTo(50) // Set the width and height of the backButtonView to 100
+        }
+        backButtonView.addSubview(backButton)
+        backButton.snp.makeConstraints { make in
+            //make.center.equalToSuperview()
+            make.leading.top.equalToSuperview().offset(10)
+            make.width.height.equalTo(25)
+        }
+        backButton.imageView?.contentMode = .scaleAspectFill // Ensure the button's content scales properly
     }
     
     public func configure(with model: Title) {
@@ -104,7 +192,7 @@ class DetailViewController: UIViewController {
         let rating = String(format: "%.1f", model.vote_average)
         let combinedText = "\(formattedDate) - \(rating) ⭐️"
         let attributedText = NSAttributedString(string: combinedText, attributes: [
-            NSAttributedString.Key.foregroundColor: UIColor.gray.withAlphaComponent(0.7)
+            NSAttributedString.Key.foregroundColor: UIColor.white.withAlphaComponent(0.7)
         ])
         releaseDateLabel.attributedText = attributedText
         
@@ -132,3 +220,9 @@ class DetailViewController: UIViewController {
         
         return "Unknown"
     }}
+
+extension DetailViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+}
