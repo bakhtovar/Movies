@@ -177,11 +177,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             
-            cell.didSelectItem = { [weak self] selectedMovie in
-                let detailViewController = DetailViewController()
-                detailViewController.configureTitle(with: selectedMovie)
-                self?.navigationController?.pushViewController(detailViewController, animated: true)
-            }
+            cell.didSelectItem = { [weak self] selectedMovie, indexPath in
+                    let detailViewController = DetailViewController()
+                    detailViewController.configureTitle(with: selectedMovie)
+                    self?.navigationController?.pushViewController(detailViewController, animated: true)
+                }
             
             return cell
         }

@@ -23,7 +23,7 @@ class DetailViewController: UIViewController {
     // MARK: - UI
     
     var status = 0
-    
+    var moviesCell = MoviesTableViewCell()
     private lazy var shadowView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
@@ -72,6 +72,19 @@ class DetailViewController: UIViewController {
         return label
     }()
     
+    private lazy var downloadButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .red
+        button.setTitle("Download", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 7
+        button.addTarget(self, action: #selector(downloadButtonTapped), for: .touchUpInside)
+        button.layer.masksToBounds = true
+        
+        return button
+    }()
+    
     private lazy var backButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -92,9 +105,26 @@ class DetailViewController: UIViewController {
         setupViews()
         setupConstraints()
         configureNavigationBar()
+        
+       
+        moviesCell.didSelectItem = { [weak self] title, indexPath in
+                   guard let self = self else { return }
+                   self.moviesCell.downloadTitleAt(indexPath: indexPath)
+               }
     }
     
     // MARK: - Private Methods
+    @objc private func downloadButtonTapped(sender: UIButton) {
+        // Perform the necessary action for downloading the title
+        guard let collectionView = sender.superview?.superview as? UICollectionView,
+              let indexPath = collectionView.indexPath(for: sender.superview as! UICollectionViewCell) else {
+            return
+        }
+        moviesCell.downloadTitleAt(indexPath: indexPath)
+        
+        print("works")
+        print(moviesCell.downloadTitleAt(indexPath: indexPath))
+    }
     
     private func setupViews() {
         view.addSubview(backgroundImageView)
@@ -103,6 +133,7 @@ class DetailViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(releaseDateLabel)
         view.addSubview(descriptionLabel)
+        view.addSubview(downloadButton)
     }
     
     private func setupConstraints() {
@@ -145,7 +176,12 @@ class DetailViewController: UIViewController {
             make.trailing.equalToSuperview().inset(20)
         }
         
-      
+        downloadButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(descriptionLabel.snp.bottom).offset(25)
+            make.width.equalTo(140)
+            make.height.equalTo(40)
+        }
     }
     
     private func configureNavigationBar() {
@@ -162,6 +198,7 @@ class DetailViewController: UIViewController {
     // MARK: - Public Methods
     
     public func configureMovie(with model: MovieItem) {
+       // moviesCell.downloadTitleAt(indexPath: model[indexPath.row])
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
         

@@ -100,6 +100,8 @@ class MoviesTableViewCell: UITableViewCell {
     
     private var titles: [Title] = [Title]()
     
+    var didSelectItem: ((Title, IndexPath) -> Void)?
+    
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 120, height: 170)
@@ -110,8 +112,6 @@ class MoviesTableViewCell: UITableViewCell {
         collectionView.delegate = self
         return collectionView
     }()
-    
-    var didSelectItem: ((Title) -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -176,22 +176,19 @@ extension MoviesTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        let selectedMovie = titles[indexPath.row]
+        let selectedMovie = titles[indexPath.item]
         
-        didSelectItem?(selectedMovie)
-        
+        didSelectItem?(selectedMovie, indexPath)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        
         let config = UIContextMenuConfiguration(
             identifier: nil,
-            previewProvider: nil) {[weak self] _ in
+            previewProvider: nil) { _ in
                 let downloadAction = UIAction(title: "Download", subtitle: nil, image: nil, identifier: nil, discoverabilityTitle: nil, state: .off) { _ in
-                    self?.downloadTitleAt(indexPath: indexPath)
+                    self.downloadTitleAt(indexPath: indexPath)
                 }
                 return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [downloadAction])
             }
         return config
-    }
-}
+    }}
