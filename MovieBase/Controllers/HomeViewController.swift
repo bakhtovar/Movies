@@ -6,11 +6,7 @@
 //
 
 import UIKit
-
-
-import UIKit
 import SnapKit
-//import SkeletonView
 
 enum Sections: Int {
     case Popular = 0
@@ -80,25 +76,6 @@ class HomeViewController: UIViewController {
         }
     }
     
-//    private func configureHeaderUIView() {
-//        APICaller.shared.getNowPlayingMovies { [weak self] result in
-//            switch result {
-//            case .success(let titles):
-//                DispatchQueue.main.async {
-//                    let selectedTitle = titles.randomElement()
-//                    self?.randomTrendingMovies = selectedTitle
-//                    let titleViewModel = TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? "")
-//                   // self?.headerView?.configure(with: TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? ""))
-//                    self?.headerView?.configure(with: titleViewModel)
-//
-//
-//                }
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
-//    }
-    
     private func configureHeaderUIView() {
         APICaller.shared.getNowPlayingMovies { [weak self] result in
             switch result {
@@ -116,23 +93,6 @@ class HomeViewController: UIViewController {
             }
         }
     }
-
-    
-    //    private func configureHeaderUIView() {
-    //        APICaller.shared.getNowPlayingMovies { [weak self] result in
-    //            switch result {
-    //            case .success(let titles):
-    //                DispatchQueue.main.async {
-    //                    let titleViewModels = titles.map { TitleViewModel(titleName: $0.original_title ?? "", posterURL: $0.poster_path ?? "") }
-    //                    let photosModel = PhotosModel(photos: titleViewModels)
-    //                    self?.headerView?.urlPhotos = [photosModel]
-    //                    self?.headerView?.configure(with: titleViewModels)
-    //                }
-    //            case .failure(let error):
-    //                print(error.localizedDescription)
-    //            }
-    //        }
-    //    }
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
@@ -249,13 +209,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
 
-//    @objc private func arrowButtonTapped(_ sender: UIButton) {
-//        let section = sender.tag // Get the section from the tag
-//        let expandedViewController = ExpandedViewController()
-//        expandedViewController.index = section
-//        navigationController?.pushViewController(expandedViewController, animated: true)  
-//    }
-    
     @objc private func arrowButtonTapped(_ sender: UIButton) {
         let section = sender.tag // Get the section from the tag
         let expandedViewController = ExpandedViewController()
@@ -279,12 +232,3 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
         }
     }
-
-//extension HomeViewController: CollectionViewTableViewCellDelegate {
-//    func collectionViewTableViewCellDidTapCell(_ cell: MoviesTableViewCell) {
-//        DispatchQueue.main.async { [weak self] in
-//            let vc = ExpandedViewController()
-//            self?.navigationController?.pushViewController(vc, animated: true)
-//        }
-//    }
-//}

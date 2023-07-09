@@ -26,9 +26,7 @@ class MainTabViewController: UITabBarController {
         favouritesVC.title = "Favourites"
         searchVC.title = "Search"
         
-        
         tabBar.tintColor = .label
-        
         setViewControllers([homeVC, searchVC, favouritesVC], animated: true)
     }
 }

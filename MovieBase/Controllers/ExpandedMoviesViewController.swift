@@ -9,14 +9,13 @@ import UIKit
 
 class ExpandedViewController: UIViewController {
    
+    //MARK: - Data Layer
+    public var titles: [Title] = [Title]()
     private let movies: [Title] = []
     let sectionsTitle: [String] = ["getPopularMovies", "getNowPlayingMovies", "getUpcomingMovies"]
     let titleName: [String] = ["Popular", "Now Playing ", "Upcoming"]
     
     var index: Int = 0
-
-    //MARK: - Data Layer
-    public var titles: [Title] = [Title]()
         
     //MARK: - UI
     public lazy var expandCollectionView: UICollectionView  = {

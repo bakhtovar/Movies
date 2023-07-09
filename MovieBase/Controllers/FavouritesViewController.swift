@@ -9,6 +9,7 @@ import UIKit
 
 class FavouritesViewController: UIViewController {
     
+    //MARK: - Data Layer
     private var titles: [MovieItem] = [MovieItem]()
     
     // MARK: - UI
@@ -28,7 +29,6 @@ class FavouritesViewController: UIViewController {
         view.addSubview(favouritesTable)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationItem.largeTitleDisplayMode = .always
-        
         makeConstraints()
         self.fetchLocalStorageForDownload()
         NotificationCenter.default.addObserver(forName: NSNotification.Name("downloaded"), object: nil, queue: nil) { _ in
@@ -61,7 +61,6 @@ class FavouritesViewController: UIViewController {
             }
         }
     }
-    
 }
 
 extension FavouritesViewController: UITableViewDelegate, UITableViewDataSource {
@@ -74,7 +73,6 @@ extension FavouritesViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: FavouriteTableCell.nameOfClass, for: indexPath) as? FavouriteTableCell else {
             return UITableViewCell()
         }
-        
         let title = titles[indexPath.row]
         let model = TitleViewModel(titleName: title.original_name ?? title.original_title ?? "" , posterURL: title.poster_path ?? "")
         cell.configure(with: model)
