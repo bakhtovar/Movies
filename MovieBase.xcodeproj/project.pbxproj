@@ -32,6 +32,8 @@
 		0413C9592A56D9350030081C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0413C9582A56D9350030081C /* DetailViewController.swift */; };
 		049782722A581B9B00877B09 /* FavouriteTableCell .swift in Sources */ = {isa = PBXBuildFile; fileRef = 049782712A581B9B00877B09 /* FavouriteTableCell .swift */; };
 		049782772A58231100877B09 /* DataPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049782762A58231100877B09 /* DataPersistenceManager.swift */; };
+		049782792A5AEEAE00877B09 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049782782A5AEEAE00877B09 /* SearchViewController.swift */; };
+		0497827B2A5AF00700877B09 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0497827A2A5AF00600877B09 /* SearchResultsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +60,8 @@
 		0413C9582A56D9350030081C /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		049782712A581B9B00877B09 /* FavouriteTableCell .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavouriteTableCell .swift"; sourceTree = "<group>"; };
 		049782762A58231100877B09 /* DataPersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPersistenceManager.swift; sourceTree = "<group>"; };
+		049782782A5AEEAE00877B09 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		0497827A2A5AF00600877B09 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +168,8 @@
 				0413C92D2A553D0C0030081C /* HomeViewController.swift */,
 				0413C9322A553DDC0030081C /* FavouritesViewController.swift */,
 				0413C9582A56D9350030081C /* DetailViewController.swift */,
+				049782782A5AEEAE00877B09 /* SearchViewController.swift */,
+				0497827A2A5AF00600877B09 /* SearchResultsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -259,6 +265,7 @@
 				0413C9472A55520C0030081C /* MoviesTableViewCell.swift in Sources */,
 				0413C91C2A5537220030081C /* MovieBase.xcdatamodeld in Sources */,
 				0413C9352A5541300030081C /* HeaderUIView.swift in Sources */,
+				049782792A5AEEAE00877B09 /* SearchViewController.swift in Sources */,
 				0413C9552A5599CF0030081C /* ExpandedMoviesViewController.swift in Sources */,
 				0413C9422A554B130030081C /* Tittle.swift in Sources */,
 				0413C93A2A5542BB0030081C /* TitleViewModel.swift in Sources */,
@@ -267,6 +274,7 @@
 				0413C94F2A557C7C0030081C /* SectionCollectionViewCell.swift in Sources */,
 				049782722A581B9B00877B09 /* FavouriteTableCell .swift in Sources */,
 				0413C93D2A5543DE0030081C /* Extenstions.swift in Sources */,
+				0497827B2A5AF00700877B09 /* SearchResultsViewController.swift in Sources */,
 				0413C9142A5537220030081C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

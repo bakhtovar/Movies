@@ -15,17 +15,21 @@ class MainTabViewController: UITabBarController {
         view.backgroundColor = .systemBackground
         
         let homeVC = UINavigationController(rootViewController: HomeViewController())
+        let searchVC = UINavigationController(rootViewController: SearchViewController())
         let favouritesVC = UINavigationController(rootViewController: FavouritesViewController())
         
         homeVC.tabBarItem.image = UIImage(systemName: "house")
         favouritesVC.tabBarItem.image = UIImage(systemName: "bookmark")
+        searchVC.tabBarItem.image = UIImage(systemName: "magnifyingglass")
         
         homeVC.title = "Home"
         favouritesVC.title = "Favourites"
+        searchVC.title = "Search"
+        
         
         tabBar.tintColor = .label
         
-        setViewControllers([homeVC, favouritesVC], animated: true)
+        setViewControllers([homeVC, searchVC, favouritesVC], animated: true)
     }
 }
 

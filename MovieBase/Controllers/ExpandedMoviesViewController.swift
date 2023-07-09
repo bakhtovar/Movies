@@ -63,7 +63,7 @@ class ExpandedViewController: UIViewController {
             print("Invalid flag")
         }
     }
-
+  
     private func handleAPICallResult(_ result: Result<[Title], Error>, for controller: ExpandedViewController?) {
         switch result {
         case .success(let titles):

@@ -135,7 +135,7 @@ class MoviesTableViewCell: UITableViewCell {
         contentView.addSubview(collectionView)
     }
     
-    private func downloadTitleAt(indexPath: IndexPath) {
+    internal func downloadTitleAt(indexPath: IndexPath) {
         
         DataPersistenceManager.shared.downloadMovieWith(model: titles[indexPath.row]) { result in
             switch result {

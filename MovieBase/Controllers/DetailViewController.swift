@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import SDWebImage
 
-
 protocol DetailConfigurable {
     var original_title: String { get }
     var overview: String { get }
@@ -24,6 +23,7 @@ class DetailViewController: UIViewController {
     // MARK: - UI
     
     var status = 0
+    
     private lazy var shadowView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
@@ -75,8 +75,6 @@ class DetailViewController: UIViewController {
     private lazy var backButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
-       // let tapGesture = UITapGestureRecognizer(target: self, action: #selector(backButtonTapped))
-        //view.addGestureRecognizer(tapGesture)
         return view
     }()
     
@@ -84,7 +82,6 @@ class DetailViewController: UIViewController {
         let button = UIButton()
         button.setBackgroundImage(UIImage(systemName: "arrow.left"), for: .normal)
         button.tintColor = .yellow
-      //  button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -106,22 +103,17 @@ class DetailViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(releaseDateLabel)
         view.addSubview(descriptionLabel)
-       // view.addSubview(backButtonView)
-        //backButtonView.addSubview(backButton)
     }
     
     private func setupConstraints() {
         backgroundImageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.trailing.equalToSuperview()
-            if(status == 0) {
+            if status == 0 {
                 make.top.equalToSuperview().inset(-50)
-            } else if (status == 1) {
+            } else if status == 1 {
                 make.top.equalToSuperview().inset(-100)
             }
-           
-            print(status)
-            print("status")
             make.height.equalTo(300)
         }
         
@@ -153,27 +145,11 @@ class DetailViewController: UIViewController {
             make.trailing.equalToSuperview().inset(20)
         }
         
-//        backButtonView.snp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(40)
-//            make.left.equalToSuperview().offset(10)
-//            make.width.height.equalTo(50)
-//        }
-//
-//        backButton.snp.makeConstraints { make in
-//            make.leading.top.equalToSuperview().offset(10)
-//            make.width.height.equalTo(25)
-//        }
+      
     }
     
-//    private func configureNavigationBar() {
-//
-//    //    navigationController?.setNavigationBarHidden(true, animated: false)
-//        navigationController?.interactivePopGestureRecognizer?.delegate = self
-//        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
-//    }
-    
     private func configureNavigationBar() {
-        navigationController?.navigationBar.barTintColor = .yellow
+       //navigationController?.navigationBar.barTintColor = .yellow
         navigationController?.navigationBar.tintColor = .yellow
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.yellow]
         navigationController?.navigationBar.isTranslucent = false
@@ -183,20 +159,11 @@ class DetailViewController: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
-    // MARK: - Button Actions
-    
-//    @objc private func backButtonTapped() {
-//       navigationController?.popViewController(animated: true)
-//    }
-
     // MARK: - Public Methods
     
     public func configureMovie(with model: MovieItem) {
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
-        
-        print(model.release_date)
-        print("works")
         
         let formattedDate = formatDate(model.release_date)
         let rating = String(format: "%.1f", model.vote_average)
@@ -218,9 +185,6 @@ class DetailViewController: UIViewController {
     public func configureTitle(with model: Title) {
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
-        
-        print(model.release_date)
-        print("works")
         
         let formattedDate = formatDate(model.release_date)
         let rating = String(format: "%.1f", model.vote_average)
@@ -253,7 +217,8 @@ class DetailViewController: UIViewController {
         }
         
         return "Unknown"
-    }}
+    }
+}
 
 extension DetailViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
