@@ -115,10 +115,16 @@ extension ExpandedViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailViewController = DetailViewController()
-        let selectedMovie = titles[indexPath.row]
-        
-        detailViewController.configureTitle(with: selectedMovie)
-        navigationController?.pushViewController(detailViewController, animated: true)
+        DispatchQueue.main.async { [weak self] in
+            let detailViewController = DetailViewController()
+            let selectedMovie = self?.titles[indexPath.row]
+            
+            if let movie = selectedMovie {
+                detailViewController.configureTitle(with: movie)
+            }
+            
+            self?.navigationController?.pushViewController(detailViewController, animated: true)
+        }
     }
 }
+

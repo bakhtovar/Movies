@@ -48,8 +48,23 @@ class HomeViewController: UIViewController {
         getNowPlayingMovies()
         configureHeaderUIView()
         
+        navigationController?.navigationBar.isTranslucent = false
+        
 //        expandedViewController = ExpandedViewController()
 //        expandedViewController?.delegate = self
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if #available(iOS 13.0, *) {
+            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+                if traitCollection.userInterfaceStyle == .light {
+                    // Switch to dark mode
+                    overrideUserInterfaceStyle = .dark
+                }
+            }
+        }
     }
     
     // MARK: - Constraints
@@ -101,49 +116,76 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
             
-            switch indexPath.section {
-            case Sections.NowPlaying.rawValue:
-                APICaller.shared.getNowPlayingMovies { result in
-                    switch result {
-                    case .success(let titles):
-                        cell.configure(with: titles)
-                    case .failure(let error):
-                        print(error.localizedDescription)
+                switch indexPath.section {
+                case Sections.NowPlaying.rawValue:
+                    APICaller.shared.getNowPlayingMovies { result in
+                        switch result {
+                        case .success(let titles):
+                            cell.configure(with: titles)
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
                     }
+                    //    cell.isLoading = false
+                    
+                case Sections.Popular.rawValue:
+                    APICaller.shared.getPopularMovies { result in
+                        switch result {
+                        case .success(let titles):
+                            cell.configure(with: titles)
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
+                    }
+                    //  cell.isLoading = false
+                    
+                case Sections.Upcoming.rawValue:
+                    
+                    APICaller.shared.getUpcomingMovies { result in
+                        switch result {
+                        case .success(let titles):
+                            cell.configure(with: titles)
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
+                    }
+                    
+             
+                    // cell.isLoading = false
+                    
+                default:
+                    return UITableViewCell()
                 }
                 
-            case Sections.Popular.rawValue:
-                APICaller.shared.getPopularMovies { result in
-                    switch result {
-                    case .success(let titles):
-                        cell.configure(with: titles)
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                }
                 
-            case Sections.Upcoming.rawValue:
+                //            cell.didSelectItem = { [weak self] selectedMovie, indexPath in
+                //                let detailViewController = DetailViewController()
+                //                guard let loader = self?.loader() else {return}
+                //                detailViewController.configureTitle(with: selectedMovie)
+                //               // detailViewController.showLoadingIndicator()
+                //                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                //                    self?.stopLoader(loader: loader)
+                //                    self?.navigationController?.pushViewController(detailViewController, animated: true)
+                //                }
+                //            }
                 
-                APICaller.shared.getUpcomingMovies { result in
-                    switch result {
-                    case .success(let titles):
-                        cell.configure(with: titles)
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                }
-                
-            default:
-                return UITableViewCell()
-            }
-            
-            cell.didSelectItem = { [weak self] selectedMovie, indexPath in
+                cell.didSelectItem = { [weak self] selectedMovie, indexPath in
+                    guard let self = self else { return }
+                    
                     let detailViewController = DetailViewController()
+                    
+                    let loader = self.loader()
                     detailViewController.configureTitle(with: selectedMovie)
-                    self?.navigationController?.pushViewController(detailViewController, animated: true)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.stopLoader(loader: loader)
+                        self.navigationController?.pushViewController(detailViewController, animated: true)
+                      
+                    }
                 }
-            
+                
             return cell
+            
         }
         
         

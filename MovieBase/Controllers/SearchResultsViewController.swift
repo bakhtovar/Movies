@@ -59,6 +59,5 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
         let selectedMovie = titles[indexPath.row]
         detailViewController.configureTitle(with: selectedMovie)
         navigationController?.pushViewController(detailViewController, animated: true)
-        print("works")
     }
 }

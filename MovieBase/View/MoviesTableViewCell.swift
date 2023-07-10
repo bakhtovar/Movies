@@ -5,15 +5,13 @@
 //  Created by Bakhtovar on 05/07/23.
 //
 
-
 import UIKit
-import SnapKit
 
 class MoviesTableViewCell: UITableViewCell {
     
     weak var navigationController: UINavigationController?
     
-    private var titles: [Title] = [Title]()
+    private var titles: [Title] = []
     
     var didSelectItem: ((Title, IndexPath) -> Void)?
     
@@ -28,15 +26,48 @@ class MoviesTableViewCell: UITableViewCell {
         return collectionView
     }()
     
+    private lazy var loaderView: UIActivityIndicatorView = {
+        let loaderView = UIActivityIndicatorView(style: .gray)
+        loaderView.hidesWhenStopped = true
+        loaderView.translatesAutoresizingMaskIntoConstraints = false
+        return loaderView
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .systemBackground
         addSubviews()
         setupConstraints()
+        showLoader()
+        
+        navigationController?.navigationBar.isTranslucent = false
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func addSubviews() {
+        contentView.addSubview(collectionView)
+        contentView.addSubview(loaderView)
+    }
+    
+    private func setupConstraints() {
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        loaderView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+    }
+    
+    private func showLoader() {
+        loaderView.startAnimating()
+    }
+    
+    private func hideLoader() {
+        loaderView.stopAnimating()
     }
     
     func configure(with titles: [Title]) {
@@ -46,25 +77,14 @@ class MoviesTableViewCell: UITableViewCell {
         }
     }
     
-    private func addSubviews() {
-        contentView.addSubview(collectionView)
-    }
-    
     internal func downloadTitleAt(indexPath: IndexPath) {
-        
         DataPersistenceManager.shared.downloadMovieWith(model: titles[indexPath.row]) { result in
             switch result {
             case .success():
-            NotificationCenter.default.post(name: NSNotification.Name("downloaded"), object: nil)
+                NotificationCenter.default.post(name: NSNotification.Name("downloaded"), object: nil)
             case .failure(let error):
                 print(error)
             }
-        }
-    }
-    
-    private func setupConstraints() {
-        collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
         }
     }
 }
@@ -106,4 +126,5 @@ extension MoviesTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
                 return UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [downloadAction])
             }
         return config
-    }}
+    }
+}

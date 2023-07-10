@@ -85,6 +85,12 @@ class DetailViewController: UIViewController {
         return button
     }()
     
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .gray)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
     private lazy var backButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -102,17 +108,32 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
+        addSubviews()
         setupConstraints()
         configureNavigationBar()
         
-       
+            DispatchQueue.main.async {
+                self.backgroundImageView.image = UIImage(named: "WebView")
+            }
+        
         moviesCell.didSelectItem = { [weak self] title, indexPath in
                    guard let self = self else { return }
                    self.moviesCell.downloadTitleAt(indexPath: indexPath)
                }
-    }
+        
+//        showLoadingIndicator()
+        
+        navigationController?.navigationBar.isTranslucent = false
     
+    }
+//    
+//    override func viewWillLayoutSubviews() {
+//        let loader = self.loader()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            self.stopLoader(loader: loader)
+//        }
+//    }
+
     // MARK: - Private Methods
     @objc private func downloadButtonTapped(sender: UIButton) {
         // Perform the necessary action for downloading the title
@@ -126,7 +147,8 @@ class DetailViewController: UIViewController {
         print(moviesCell.downloadTitleAt(indexPath: indexPath))
     }
     
-    private func setupViews() {
+    private func addSubviews() {
+        view.addSubview(loadingIndicator)
         view.addSubview(backgroundImageView)
         backgroundImageView.addSubview(shadowView)
         view.addSubview(movieImageView)
@@ -134,9 +156,14 @@ class DetailViewController: UIViewController {
         view.addSubview(releaseDateLabel)
         view.addSubview(descriptionLabel)
         view.addSubview(downloadButton)
+        
     }
     
     private func setupConstraints() {
+        loadingIndicator.snp.makeConstraints { make in
+                   make.center.equalToSuperview()
+               }
+        
         backgroundImageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.trailing.equalToSuperview()
@@ -187,14 +214,23 @@ class DetailViewController: UIViewController {
     private func configureNavigationBar() {
        //navigationController?.navigationBar.barTintColor = .yellow
         navigationController?.navigationBar.tintColor = .yellow
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.yellow]
+     //   navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.yellow]
         navigationController?.navigationBar.isTranslucent = false
         
         navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+       // navigationController?.interactivePopGestureRecognizer?.delegate = self
+        //navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
+        func showLoadingIndicator() {
+           loadingIndicator.startAnimating()
+       }
+
+        func hideLoadingIndicator() {
+           loadingIndicator.stopAnimating()
+       }
+
+       
     // MARK: - Public Methods
     
     public func configureMovie(with model: MovieItem) {
@@ -202,6 +238,8 @@ class DetailViewController: UIViewController {
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
         
+        showLoadingIndicator()
+        
         let formattedDate = formatDate(model.release_date)
         let rating = String(format: "%.1f", model.vote_average)
         let combinedText = "\(formattedDate) - \(rating) ⭐️"
@@ -217,9 +255,12 @@ class DetailViewController: UIViewController {
         if let posterPath = model.poster_path, let url = URL(string: "https://image.tmdb.org/t/p/w500/\(posterPath)") {
             movieImageView.sd_setImage(with: url, completed: nil)
         }
+        
+        hideLoadingIndicator()
     }
     
     public func configureTitle(with model: Title) {
+    
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
         
@@ -238,6 +279,8 @@ class DetailViewController: UIViewController {
         if let posterPath = model.poster_path, let url = URL(string: "https://image.tmdb.org/t/p/w500/\(posterPath)") {
             movieImageView.sd_setImage(with: url, completed: nil)
         }
+        
+        hideLoadingIndicator()
     }
     
     private func formatDate(_ dateString: String?) -> String {
