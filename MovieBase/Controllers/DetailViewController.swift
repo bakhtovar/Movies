@@ -112,27 +112,21 @@ class DetailViewController: UIViewController {
         setupConstraints()
         configureNavigationBar()
         
-            DispatchQueue.main.async {
-                self.backgroundImageView.image = UIImage(named: "WebView")
-            }
+        DispatchQueue.main.async {
+            self.backgroundImageView.image = UIImage(named: "WebView")
+        }
         
         moviesCell.didSelectItem = { [weak self] title, indexPath in
-                   guard let self = self else { return }
-                   self.moviesCell.downloadTitleAt(indexPath: indexPath)
-               }
+            guard let self = self else { return }
+            self.moviesCell.downloadTitleAt(indexPath: indexPath)
+        }
         
-//        showLoadingIndicator()
+        //        showLoadingIndicator()
         
         navigationController?.navigationBar.isTranslucent = false
-    
+        
+        view.backgroundColor = .systemBackground
     }
-//    
-//    override func viewWillLayoutSubviews() {
-//        let loader = self.loader()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            self.stopLoader(loader: loader)
-//        }
-//    }
 
     // MARK: - Private Methods
     @objc private func downloadButtonTapped(sender: UIButton) {
