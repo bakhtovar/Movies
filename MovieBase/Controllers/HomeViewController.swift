@@ -57,8 +57,6 @@ class HomeViewController: UIViewController {
         
         navigationController?.navigationBar.isTranslucent = false
         
-//        expandedViewController = ExpandedViewController()
-//        expandedViewController?.delegate = self
     }
     
     // MARK: - Constraints
@@ -69,19 +67,85 @@ class HomeViewController: UIViewController {
     }
     
     // MARK: - Private
+    
+    private func fetchNowPlayingMovies(for cell: MoviesTableViewCell) {
+        APICaller.shared.getNowPlayingMovies { [weak self] result in
+            switch result {
+            case .success(let titles):
+                DispatchQueue.main.async {
+                    cell.configure(with: titles)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    private func fetchPopularMovies(for cell: MoviesTableViewCell) {
+        APICaller.shared.getPopularMovies { [weak self] result in
+            switch result {
+            case .success(let titles):
+                DispatchQueue.main.async {
+                    cell.configure(with: titles)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+
+    private func fetchUpcomingMovies(for cell: MoviesTableViewCell) {
+        APICaller.shared.getUpcomingMovies { [weak self] result in
+            switch result {
+            case .success(let titles):
+                DispatchQueue.main.async {
+                    cell.configure(with: titles)
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     @objc private func refreshData() {
-           getNowPlayingMovies()
-           configureHeaderUIView()
-       }
+        DispatchQueue.main.async {
+            var indexPathsToReload: [IndexPath] = []
+            
+            for section in 0..<self.homeFeedTable.numberOfSections {
+                for row in 0..<self.homeFeedTable.numberOfRows(inSection: section) {
+                    let indexPath = IndexPath(row: row, section: section)
+                    if let cell = self.homeFeedTable.cellForRow(at: indexPath) as? MoviesTableViewCell {
+                        switch indexPath.section {
+                        case Sections.NowPlaying.rawValue:
+                            self.fetchNowPlayingMovies(for: cell)
+                        case Sections.Popular.rawValue:
+                            self.fetchPopularMovies(for: cell)
+                            
+                        case Sections.Upcoming.rawValue:
+                            self.fetchUpcomingMovies(for: cell)
+                            
+                        default:
+                            break
+                        }
+                        
+                        indexPathsToReload.append(indexPath)
+                    }
+                }
+            }
+            
+            self.homeFeedTable.reloadRows(at: indexPathsToReload, with: .automatic)
+            self.configureHeaderUIView()
+            self.getNowPlayingMovies()
+            self.refreshControl.endRefreshing()
+        }
+    }
     
     private func addSubViews() {
         view.addSubview(homeFeedTable)
         homeFeedTable.addSubview(refreshControl)
     }
     
-    
     private func getNowPlayingMovies() {
-        
         DispatchQueue.main.async {
             APICaller.shared.getNowPlayingMovies { results in
                 switch results {
@@ -117,83 +181,43 @@ class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
-        func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.nameOfClass) as? MoviesTableViewCell else {
-                return UITableViewCell()
-            }
-            
-                switch indexPath.section {
-                case Sections.NowPlaying.rawValue:
-                    APICaller.shared.getNowPlayingMovies { result in
-                        switch result {
-                        case .success(let titles):
-                            cell.configure(with: titles)
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                        }
-                    }
-                    //    cell.isLoading = false
-                    
-                case Sections.Popular.rawValue:
-                    APICaller.shared.getPopularMovies { result in
-                        switch result {
-                        case .success(let titles):
-                            cell.configure(with: titles)
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                        }
-                    }
-                    //  cell.isLoading = false
-                    
-                case Sections.Upcoming.rawValue:
-                    
-                    APICaller.shared.getUpcomingMovies { result in
-                        switch result {
-                        case .success(let titles):
-                            cell.configure(with: titles)
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                        }
-                    }
-                    
-             
-                    // cell.isLoading = false
-                    
-                default:
-                    return UITableViewCell()
-                }
-                
-                
-                //            cell.didSelectItem = { [weak self] selectedMovie, indexPath in
-                //                let detailViewController = DetailViewController()
-                //                guard let loader = self?.loader() else {return}
-                //                detailViewController.configureTitle(with: selectedMovie)
-                //               // detailViewController.showLoadingIndicator()
-                //                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                //                    self?.stopLoader(loader: loader)
-                //                    self?.navigationController?.pushViewController(detailViewController, animated: true)
-                //                }
-                //            }
-                
-                cell.didSelectItem = { [weak self] selectedMovie, indexPath in
-                    guard let self = self else { return }
-                    
-                    let detailViewController = DetailViewController()
-                    
-                    let loader = self.loader()
-                    detailViewController.configureTitle(with: selectedMovie)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.stopLoader(loader: loader)
-                        self.navigationController?.pushViewController(detailViewController, animated: true)
-                      
-                    }
-                }
-                
-            return cell
-            
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MoviesTableViewCell.nameOfClass) as? MoviesTableViewCell else {
+            return UITableViewCell()
         }
         
+        switch indexPath.section {
+        case Sections.NowPlaying.rawValue:
+            fetchNowPlayingMovies(for: cell)
+        case Sections.Popular.rawValue:
+            fetchPopularMovies(for: cell)
+        case Sections.Upcoming.rawValue:
+            fetchUpcomingMovies(for: cell)
+            
+        default:
+            return UITableViewCell()
+        }
+        
+        cell.didSelectItem = { [weak self] selectedMovie, indexPath in
+            guard let self = self else { return }
+            
+            let detailViewController = DetailViewController()
+            
+            let loader = self.loader()
+            detailViewController.configureTitle(with: selectedMovie)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.stopLoader(loader: loader)
+                self.navigationController?.pushViewController(detailViewController, animated: true)
+            }
+        }
+        
+        return cell
+    }
+     
+ 
+
         
         func numberOfSections(in tableView: UITableView) -> Int {
             sectionsTitle.count

@@ -8,19 +8,19 @@
 import UIKit
 
 class ExpandedViewController: UIViewController {
-   
-    //MARK: - Data Layer
-    public var titles: [Title] = [Title]()
+    
+    // MARK: - Data Layer
+    public var titles: [Title] = []
     private let movies: [Title] = []
     let sectionsTitle: [String] = ["getPopularMovies", "getNowPlayingMovies", "getUpcomingMovies"]
     let titleName: [String] = ["Popular", "Now Playing ", "Upcoming"]
     
     var index: Int = 0
-        
-    //MARK: - UI
-    public lazy var expandCollectionView: UICollectionView  = {
+    
+    // MARK: - UI
+    public lazy var expandCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width / 3 - 10 , height: 200)
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width / 3 - 10, height: 200)
         layout.minimumInteritemSpacing = 0
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(SectionCollectionViewCell.self, forCellWithReuseIdentifier: SectionCollectionViewCell.nameOfClass)
@@ -29,20 +29,30 @@ class ExpandedViewController: UIViewController {
         return collectionView
     }()
     
-    //MARK: - Lifecycle
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        return refreshControl
+    }()
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         view.addSubview(expandCollectionView)
         addBackButton()
         makeConstraints()
-
+        
         if index >= 0 && index < sectionsTitle.count {
             let flag = sectionsTitle[index].trimmingCharacters(in: .whitespaces)
-                fetchMovies(flag: flag)
+            fetchMovies(flag: flag)
             title = titleName[index]
-            }
+        }
+        
+        expandCollectionView.addSubview(refreshControl)
     }
+    
+    // MARK: - Private Methods
     
     private func fetchMovies(flag: String) {
         switch flag {
@@ -62,7 +72,7 @@ class ExpandedViewController: UIViewController {
             print("Invalid flag")
         }
     }
-  
+    
     private func handleAPICallResult(_ result: Result<[Title], Error>, for controller: ExpandedViewController?) {
         switch result {
         case .success(let titles):
@@ -74,12 +84,10 @@ class ExpandedViewController: UIViewController {
             print(error.localizedDescription)
         }
     }
-
-
-    // MARK: - Constraints
+    
     private func makeConstraints() {
         expandCollectionView.snp.makeConstraints { make in
-            make.size.equalToSuperview()
+            make.edges.equalToSuperview()
         }
     }
     
@@ -87,15 +95,23 @@ class ExpandedViewController: UIViewController {
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = backButton
         backButton.tintColor = .yellow
-       
+        
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
     }
-
+    
     @objc private func backButtonTapped() {
         navigationController?.dismiss(animated: true, completion: nil)
     }
     
+    @objc private func refreshData() {
+        DispatchQueue.main.async {
+            let flag = self.sectionsTitle[self.index].trimmingCharacters(in: .whitespaces)
+            self.fetchMovies(flag: flag)
+            self.expandCollectionView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
+    }
 }
 
 extension ExpandedViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -105,7 +121,8 @@ extension ExpandedViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SectionCollectionViewCell.nameOfClass, for: indexPath) as? SectionCollectionViewCell else {
-            return UICollectionViewCell()  }
+            return UICollectionViewCell()
+        }
         
         let title = titles[indexPath.row]
         cell.configure(with: title.poster_path ?? "")
@@ -127,4 +144,3 @@ extension ExpandedViewController: UICollectionViewDelegate, UICollectionViewData
         }
     }
 }
-
