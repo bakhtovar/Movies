@@ -112,15 +112,15 @@ class DetailViewController: UIViewController {
         setupConstraints()
         configureNavigationBar()
         
-        moviesCell.didSelectItem = { [weak self] title, indexPath in
-            guard let self = self else { return }
-            self.moviesCell.downloadTitleAt(indexPath: indexPath)
-        }
+//        moviesCell.didSelectItem = { [weak self] title, indexPath in
+//            guard let self = self else { return }
+//            self.moviesCell.downloadTitleAt(indexPath: indexPath)
+//            showLoadingIndicator()
+//        }
         
-        //        showLoadingIndicator()
-        
+        showLoadingIndicator()
+    
         navigationController?.navigationBar.isTranslucent = false
-        
         view.backgroundColor = .systemBackground
     }
 
@@ -151,8 +151,8 @@ class DetailViewController: UIViewController {
     
     private func setupConstraints() {
         loadingIndicator.snp.makeConstraints { make in
-                   make.center.equalToSuperview()
-               }
+            make.center.equalToSuperview()
+        }
         
         backgroundImageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -202,14 +202,11 @@ class DetailViewController: UIViewController {
     }
     
     private func configureNavigationBar() {
-       //navigationController?.navigationBar.barTintColor = .yellow
         navigationController?.navigationBar.tintColor = .yellow
-     //   navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.yellow]
         navigationController?.navigationBar.isTranslucent = false
-        
         navigationController?.setNavigationBarHidden(false, animated: false)
-       // navigationController?.interactivePopGestureRecognizer?.delegate = self
-        //navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
         func showLoadingIndicator() {
@@ -227,8 +224,6 @@ class DetailViewController: UIViewController {
        // moviesCell.downloadTitleAt(indexPath: model[indexPath.row])
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
-        
-        showLoadingIndicator()
         
         let formattedDate = formatDate(model.release_date)
         let rating = String(format: "%.1f", model.vote_average)

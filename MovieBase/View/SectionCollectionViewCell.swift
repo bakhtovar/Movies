@@ -31,7 +31,7 @@ class SectionCollectionViewCell: UICollectionViewCell {
     // MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .green
+        contentView.backgroundColor = .systemBackground
         setNeedsUpdateConstraints()
         setupUI()
         addSubviews()

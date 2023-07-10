@@ -32,7 +32,7 @@ class ExpandedViewController: UIViewController {
     //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
+        view.backgroundColor = .systemBackground
         view.addSubview(expandCollectionView)
         addBackButton()
         makeConstraints()

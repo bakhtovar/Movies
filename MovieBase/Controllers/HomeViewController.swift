@@ -22,6 +22,7 @@ class HomeViewController: UIViewController {
     
     // MARK: - Data Layer
     var expandedViewController: ExpandedViewController?
+    
     weak var delegate: SectionDelegate?
     private var randomTrendingMovies: Title?
     private var headerView: HeaderUIView?
@@ -29,6 +30,12 @@ class HomeViewController: UIViewController {
     
     
     // MARK: - UI
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        return refreshControl
+    } ()
+  
     private lazy var homeFeedTable: UITableView = {
         let homeFeedTable = UITableView(frame: .zero, style: .grouped)
         homeFeedTable.register(MoviesTableViewCell.self, forCellReuseIdentifier: MoviesTableViewCell.nameOfClass)
@@ -54,19 +61,6 @@ class HomeViewController: UIViewController {
 //        expandedViewController?.delegate = self
     }
     
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        if #available(iOS 13.0, *) {
-            if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-                if traitCollection.userInterfaceStyle == .light {
-                    // Switch to dark mode
-                    overrideUserInterfaceStyle = .dark
-                }
-            }
-        }
-    }
-    
     // MARK: - Constraints
     private func makeConstraints() {
         homeFeedTable.snp.makeConstraints { make in
@@ -75,19 +69,30 @@ class HomeViewController: UIViewController {
     }
     
     // MARK: - Private
+    @objc private func refreshData() {
+           getNowPlayingMovies()
+           configureHeaderUIView()
+       }
+    
     private func addSubViews() {
         view.addSubview(homeFeedTable)
+        homeFeedTable.addSubview(refreshControl)
     }
     
     
     private func getNowPlayingMovies() {
-        APICaller.shared.getNowPlayingMovies { results in
-            switch results {
-            case .success(let movies):
-                print(movies)
-            case .failure(let error):
-                print(error)
+        
+        DispatchQueue.main.async {
+            APICaller.shared.getNowPlayingMovies { results in
+                switch results {
+                case .success(let movies):
+                    print(movies)
+                case .failure(let error):
+                    print(error)
+                }
             }
+            self.homeFeedTable.reloadData()
+            self.refreshControl.endRefreshing()
         }
     }
     
@@ -102,6 +107,7 @@ class HomeViewController: UIViewController {
                     let title = Title(id: selectedTitle?.id ?? 0, media_type: selectedTitle?.media_type, original_name: selectedTitle?.original_name, original_title: selectedTitle?.original_title, poster_path: selectedTitle?.poster_path, overview: selectedTitle?.overview, vote_count: selectedTitle?.vote_count ?? 0, release_date: selectedTitle?.release_date, vote_average: selectedTitle?.vote_average ?? 0.0)
                     
                     self?.headerView?.configure(with: [title])
+                    //self?.refreshData()
                 }
             case .failure(let error):
                 print(error.localizedDescription)
