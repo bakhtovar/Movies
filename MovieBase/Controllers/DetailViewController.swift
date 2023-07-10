@@ -112,10 +112,6 @@ class DetailViewController: UIViewController {
         setupConstraints()
         configureNavigationBar()
         
-        DispatchQueue.main.async {
-            self.backgroundImageView.image = UIImage(named: "WebView")
-        }
-        
         moviesCell.didSelectItem = { [weak self] title, indexPath in
             guard let self = self else { return }
             self.moviesCell.downloadTitleAt(indexPath: indexPath)
