@@ -9,16 +9,23 @@ import UIKit
 
 class FavouritesViewController: UIViewController {
     
-    
     private var titles: [MovieItem] = [MovieItem]()
-    
-    // MARK: - UI
+
+        // MARK: - UI
     private lazy var favouritesTable: UITableView = {
         let table = UITableView()
         table.register(FavouriteTableCell.self, forCellReuseIdentifier: FavouriteTableCell.nameOfClass)
         table.delegate = self
         table.dataSource = self
         return table
+    }()
+    
+    private lazy var searchController: UISearchController = {
+        let controller = UISearchController(searchResultsController: nil)
+        controller.searchBar.placeholder = "Search for a Movie"
+        controller.searchBar.searchBarStyle = .minimal
+        controller.searchResultsUpdater = self
+        return controller
     }()
     
     // MARK: - Lifecycle
@@ -29,7 +36,9 @@ class FavouritesViewController: UIViewController {
         view.addSubview(favouritesTable)
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationItem.largeTitleDisplayMode = .always
-        
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        searchController.delegate = self
         makeConstraints()
         self.fetchLocalStorageForDownload()
         NotificationCenter.default.addObserver(forName: NSNotification.Name("downloaded"), object: nil, queue: nil) { _ in
@@ -40,6 +49,7 @@ class FavouritesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         title = "Favourites"
+        fetchLocalStorageForDownload()
     }
     
     // MARK: - Constraints
@@ -106,7 +116,7 @@ extension FavouritesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedMovie = titles[indexPath.row]
-        let detailViewController = DetailViewController()
+        let detailViewController = DetailViewController(movieItem: selectedMovie)
         detailViewController.configureMovie(with: selectedMovie)
         detailViewController.status = 1
         self.navigationController?.pushViewController(detailViewController, animated: true)
@@ -114,6 +124,24 @@ extension FavouritesViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension FavouritesViewController: UISearchResultsUpdating {
 
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+            let filteredTitles = titles.filter { title in
+                return title.original_name?.localizedCaseInsensitiveContains(searchText) ?? false ||
+                title.original_title?.localizedCaseInsensitiveContains(searchText) ?? false
+            }
+            self.titles = filteredTitles
+        } else {
+            self.fetchLocalStorageForDownload()
+        }
+        favouritesTable.reloadData()
+    }
+}
 
-
+extension FavouritesViewController: UISearchControllerDelegate {
+    func didDismissSearchController(_ searchController: UISearchController) {
+        fetchLocalStorageForDownload()
+    }
+}

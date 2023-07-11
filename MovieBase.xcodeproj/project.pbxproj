@@ -34,6 +34,7 @@
 		049782772A58231100877B09 /* DataPersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049782762A58231100877B09 /* DataPersistenceManager.swift */; };
 		049782792A5AEEAE00877B09 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049782782A5AEEAE00877B09 /* SearchViewController.swift */; };
 		0497827B2A5AF00700877B09 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0497827A2A5AF00600877B09 /* SearchResultsViewController.swift */; };
+		0497827E2A5D882B00877B09 /* EditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0497827D2A5D882B00877B09 /* EditViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		049782762A58231100877B09 /* DataPersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPersistenceManager.swift; sourceTree = "<group>"; };
 		049782782A5AEEAE00877B09 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		0497827A2A5AF00600877B09 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		0497827D2A5D882B00877B09 /* EditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +165,7 @@
 		0413C94D2A557C140030081C /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				0497827C2A5D881900877B09 /* Edit */,
 				0413C9542A5599CF0030081C /* ExpandedMoviesViewController.swift */,
 				0413C9152A5537220030081C /* MainTabViewController.swift */,
 				0413C92D2A553D0C0030081C /* HomeViewController.swift */,
@@ -172,6 +175,14 @@
 				0497827A2A5AF00600877B09 /* SearchResultsViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		0497827C2A5D881900877B09 /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				0497827D2A5D882B00877B09 /* EditViewController.swift */,
+			);
+			path = Edit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -275,6 +286,7 @@
 				049782722A581B9B00877B09 /* FavouriteTableCell .swift in Sources */,
 				0413C93D2A5543DE0030081C /* Extenstions.swift in Sources */,
 				0497827B2A5AF00700877B09 /* SearchResultsViewController.swift in Sources */,
+				0497827E2A5D882B00877B09 /* EditViewController.swift in Sources */,
 				0413C9142A5537220030081C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -93,6 +93,8 @@ class HomeViewController: UIViewController {
             }
         }
     }
+    
+    
 
     private func fetchUpcomingMovies(for cell: MoviesTableViewCell) {
         APICaller.shared.getUpcomingMovies { result in

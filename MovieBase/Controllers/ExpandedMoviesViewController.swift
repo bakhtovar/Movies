@@ -13,7 +13,7 @@ class ExpandedViewController: UIViewController, UIGestureRecognizerDelegate {
     public var titles: [Title] = []
     private let movies: [Title] = []
     let sectionsTitle: [String] = ["getPopularMovies", "getNowPlayingMovies", "getUpcomingMovies"]
-    let titleName: [String] = ["Popular", "Now Playing ", "Upcoming"]
+    let titleName: [String] = ["Popular", "Now Playing", "Upcoming"]
     
     var index: Int = 0
     

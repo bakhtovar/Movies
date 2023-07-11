@@ -20,7 +20,11 @@ protocol DetailConfigurable {
 
 class DetailViewController: UIViewController {
     
+    
+    private var titles: [MovieItem] = [MovieItem]()
     // MARK: - UI
+    
+    //init
     
     var status = 0
     var moviesCell = MoviesTableViewCell()
@@ -111,22 +115,49 @@ class DetailViewController: UIViewController {
     
     // MARK: - View Lifecycle
     
+    private var movieItem: MovieItem? = nil
+    
+    init(movieItem: MovieItem? = nil) {
+        self.movieItem = movieItem
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    
+    required init?(coder: NSCoder) {
+        fatalError("failed to init")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         addSubviews()
         setupConstraints()
         configureNavigationBar()
         
-//        moviesCell.didSelectItem = { [weak self] title, indexPath in
+//        moviesCell.didSelectItem = { [weak self] title in
 //            guard let self = self else { return }
-//            self.moviesCell.downloadTitleAt(indexPath: indexPath)
-//            showLoadingIndicator()
+//            self.configureMovie(with: title)
+//            self.showLoadingIndicator()
 //        }
             
         navigationController?.navigationBar.isTranslucent = false
-        view.backgroundColor = .systemBackground
+       
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let movieItem = self.movieItem else {
+            return
+        }
+        configureMovie(with: movieItem)
+        
     }
 
+    func configure(with movieItem: MovieItem) {
+            //self.movieItem = movieItem
+            // Configure the cell's UI using the movieItem properties
+        }
+    
     // MARK: - Private Methods
     @objc private func downloadButtonTapped(sender: UIButton) {
         // Perform the necessary action for downloading the title
@@ -208,6 +239,9 @@ class DetailViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        
+        let saveButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonTapped))
+              navigationItem.rightBarButtonItem = saveButton
     }
     
         func showLoadingIndicator() {
@@ -218,11 +252,41 @@ class DetailViewController: UIViewController {
            loadingIndicator.stopAnimating()
        }
 
+    @objc func editButtonTapped() {
+        guard let movieItem = self.movieItem else {
+            return
+        }
+        let detailViewController = EditViewController(movieItem: movieItem)
+     
+        self.navigationController?.pushViewController(detailViewController, animated: true)
+        
+        
+    }
+    
+ //   private func updateInfo(title: String, overview: String) {
+//        guard let movieItem = movieItem
+//            let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+//            return
+//        }
+//
+//        let context = appDelegate?.persistentContainer.viewContext
+//
+//        movieItem.original_title = title
+//        movieItem.overview = overview
+//
+//        do {
+//            try context?.save()
+//            print("Item updated successfully")
+//        } catch {
+//            print("Error updating item: \(error)")
+//        }
+//    }
        
     // MARK: - Public Methods
     
     public func configureMovie(with model: MovieItem) {
        // moviesCell.downloadTitleAt(indexPath: model[indexPath.row])
+
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
         let formattedDate = formatDate(model.release_date)
@@ -243,7 +307,6 @@ class DetailViewController: UIViewController {
     }
     
     public func configureTitle(with model: Title) {
-    
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
 
@@ -262,8 +325,6 @@ class DetailViewController: UIViewController {
         if let posterPath = model.poster_path, let url = URL(string: "https://image.tmdb.org/t/p/w500/\(posterPath)") {
             movieImageView.sd_setImage(with: url, completed: nil)
         }
-        
-       
     }
     
     private func formatDate(_ dateString: String?) -> String {
