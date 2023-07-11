@@ -86,7 +86,12 @@ class DetailViewController: UIViewController {
     }()
     
     private lazy var loadingIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .gray)
+        let indicator = UIActivityIndicatorView()
+        if #available(iOS 13.0, *) {
+            var indicator = UIActivityIndicatorView(style: .medium)
+        } else {
+            var indicator = UIActivityIndicatorView(style: .gray)
+        }
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
@@ -117,9 +122,7 @@ class DetailViewController: UIViewController {
 //            self.moviesCell.downloadTitleAt(indexPath: indexPath)
 //            showLoadingIndicator()
 //        }
-        
-        showLoadingIndicator()
-    
+            
         navigationController?.navigationBar.isTranslucent = false
         view.backgroundColor = .systemBackground
     }
@@ -132,8 +135,6 @@ class DetailViewController: UIViewController {
             return
         }
         moviesCell.downloadTitleAt(indexPath: indexPath)
-        
-        print("works")
         print(moviesCell.downloadTitleAt(indexPath: indexPath))
     }
     
@@ -224,7 +225,6 @@ class DetailViewController: UIViewController {
        // moviesCell.downloadTitleAt(indexPath: model[indexPath.row])
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
-        
         let formattedDate = formatDate(model.release_date)
         let rating = String(format: "%.1f", model.vote_average)
         let combinedText = "\(formattedDate) - \(rating) ⭐️"
@@ -240,15 +240,13 @@ class DetailViewController: UIViewController {
         if let posterPath = model.poster_path, let url = URL(string: "https://image.tmdb.org/t/p/w500/\(posterPath)") {
             movieImageView.sd_setImage(with: url, completed: nil)
         }
-        
-        hideLoadingIndicator()
     }
     
     public func configureTitle(with model: Title) {
     
         titleLabel.text = model.original_title
         descriptionLabel.text = model.overview
-        
+
         let formattedDate = formatDate(model.release_date)
         let rating = String(format: "%.1f", model.vote_average)
         let combinedText = "\(formattedDate) - \(rating) ⭐️"
@@ -265,7 +263,7 @@ class DetailViewController: UIViewController {
             movieImageView.sd_setImage(with: url, completed: nil)
         }
         
-        hideLoadingIndicator()
+       
     }
     
     private func formatDate(_ dateString: String?) -> String {

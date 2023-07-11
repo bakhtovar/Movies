@@ -27,6 +27,7 @@ class ExpandCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         addSubviews()
         setNeedsUpdateConstraints()
+        
     }
     
     required init?(coder: NSCoder) {

@@ -69,7 +69,7 @@ class HomeViewController: UIViewController {
     // MARK: - Private
     
     private func fetchNowPlayingMovies(for cell: MoviesTableViewCell) {
-        APICaller.shared.getNowPlayingMovies { [weak self] result in
+        APICaller.shared.getNowPlayingMovies { result in
             switch result {
             case .success(let titles):
                 DispatchQueue.main.async {
@@ -82,7 +82,7 @@ class HomeViewController: UIViewController {
     }
 
     private func fetchPopularMovies(for cell: MoviesTableViewCell) {
-        APICaller.shared.getPopularMovies { [weak self] result in
+        APICaller.shared.getPopularMovies { result in
             switch result {
             case .success(let titles):
                 DispatchQueue.main.async {
@@ -95,7 +95,7 @@ class HomeViewController: UIViewController {
     }
 
     private func fetchUpcomingMovies(for cell: MoviesTableViewCell) {
-        APICaller.shared.getUpcomingMovies { [weak self] result in
+        APICaller.shared.getUpcomingMovies { result in
             switch result {
             case .success(let titles):
                 DispatchQueue.main.async {
@@ -120,7 +120,6 @@ class HomeViewController: UIViewController {
                             self.fetchNowPlayingMovies(for: cell)
                         case Sections.Popular.rawValue:
                             self.fetchPopularMovies(for: cell)
-                            
                         case Sections.Upcoming.rawValue:
                             self.fetchUpcomingMovies(for: cell)
                             
@@ -139,13 +138,16 @@ class HomeViewController: UIViewController {
             self.refreshControl.endRefreshing()
         }
     }
+
     
     private func addSubViews() {
         view.addSubview(homeFeedTable)
         homeFeedTable.addSubview(refreshControl)
     }
     
+    
     private func getNowPlayingMovies() {
+        
         DispatchQueue.main.async {
             APICaller.shared.getNowPlayingMovies { results in
                 switch results {
@@ -155,8 +157,6 @@ class HomeViewController: UIViewController {
                     print(error)
                 }
             }
-            self.homeFeedTable.reloadData()
-            self.refreshControl.endRefreshing()
         }
     }
     
@@ -171,7 +171,6 @@ class HomeViewController: UIViewController {
                     let title = Title(id: selectedTitle?.id ?? 0, media_type: selectedTitle?.media_type, original_name: selectedTitle?.original_name, original_title: selectedTitle?.original_title, poster_path: selectedTitle?.poster_path, overview: selectedTitle?.overview, vote_count: selectedTitle?.vote_count ?? 0, release_date: selectedTitle?.release_date, vote_average: selectedTitle?.vote_average ?? 0.0)
                     
                     self?.headerView?.configure(with: [title])
-                    //self?.refreshData()
                 }
             case .failure(let error):
                 print(error.localizedDescription)
@@ -216,9 +215,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
      
- 
-
-        
         func numberOfSections(in tableView: UITableView) -> Int {
             sectionsTitle.count
         }
@@ -287,12 +283,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         expandedViewController.index = section
         
         let navigationController = UINavigationController(rootViewController: expandedViewController)
-        navigationController.modalPresentationStyle = .fullScreen // Present the navigation controller in full screen
-        
+       navigationController.modalPresentationStyle = .fullScreen // Present the navigation controller in full screen
+      
         present(navigationController, animated: true, completion: nil)
     }
 
-        
         func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
             return sectionsTitle[section]
         }

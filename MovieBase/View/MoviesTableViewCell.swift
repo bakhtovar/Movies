@@ -27,7 +27,12 @@ class MoviesTableViewCell: UITableViewCell {
     }()
     
     private lazy var loaderView: UIActivityIndicatorView = {
-        let loaderView = UIActivityIndicatorView(style: .gray)
+        let loaderView = UIActivityIndicatorView()
+        if #available(iOS 13.0, *) {
+             var indicator = UIActivityIndicatorView(style: .medium)
+        } else {
+            var indicator = UIActivityIndicatorView(style: .gray)
+        }
         loaderView.hidesWhenStopped = true
         loaderView.translatesAutoresizingMaskIntoConstraints = false
         return loaderView
@@ -99,6 +104,7 @@ extension MoviesTableViewCell: UICollectionViewDataSource, UICollectionViewDeleg
         guard let model = titles[indexPath.row].poster_path else {
             return UICollectionViewCell()
         }
+        hideLoader()
         cell.configure(with: model)
         cell.averageLabel.text = String(describing: titles[indexPath.row].vote_average)
         return cell

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ExpandedViewController: UIViewController {
+class ExpandedViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // MARK: - Data Layer
     public var titles: [Title] = []
@@ -50,9 +50,16 @@ class ExpandedViewController: UIViewController {
         }
         
         expandCollectionView.addSubview(refreshControl)
+        
+        
     }
     
     // MARK: - Private Methods
+    
+    private func configureNavigationBar() {
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+    }
     
     private func fetchMovies(flag: String) {
         switch flag {
@@ -94,10 +101,11 @@ class ExpandedViewController: UIViewController {
     private func addBackButton() {
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
         navigationItem.leftBarButtonItem = backButton
+    
         backButton.tintColor = .yellow
-        
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+
     }
     
     @objc private func backButtonTapped() {
