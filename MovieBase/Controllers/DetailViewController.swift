@@ -18,7 +18,7 @@ protocol DetailConfigurable {
     var poster_path: String? { get }
 }
 
-class DetailViewController: UIViewController {
+class DetailViewController: UIViewController, EditViewControllerDelegate{
     
     
     private var titles: [MovieItem] = [MovieItem]()
@@ -136,27 +136,22 @@ class DetailViewController: UIViewController {
         
 //        moviesCell.didSelectItem = { [weak self] title in
 //            guard let self = self else { return }
-//            self.configureMovie(with: title)
+//            self.configureMovie(with: movieItem!)
 //            self.showLoadingIndicator()
 //        }
             
         navigationController?.navigationBar.isTranslucent = false
        
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard let movieItem = self.movieItem else {
             return
         }
         configureMovie(with: movieItem)
-        
+        backgroundImageView.isHidden = false
     }
-
-    func configure(with movieItem: MovieItem) {
-            //self.movieItem = movieItem
-            // Configure the cell's UI using the movieItem properties
-        }
     
     // MARK: - Private Methods
     @objc private func downloadButtonTapped(sender: UIButton) {
@@ -240,8 +235,10 @@ class DetailViewController: UIViewController {
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
         
-        let saveButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonTapped))
-              navigationItem.rightBarButtonItem = saveButton
+        if (movieItem != nil) {
+            let saveButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editButtonTapped))
+            navigationItem.rightBarButtonItem = saveButton
+        }
     }
     
         func showLoadingIndicator() {
@@ -253,16 +250,20 @@ class DetailViewController: UIViewController {
        }
 
     @objc func editButtonTapped() {
-        guard let movieItem = self.movieItem else {
-            return
-        }
-        let detailViewController = EditViewController(movieItem: movieItem)
-     
-        self.navigationController?.pushViewController(detailViewController, animated: true)
-        
-        
-    }
+          guard let movieItem = self.movieItem else {
+              return
+          }
+          backgroundImageView.isHidden = true
+          let detailViewController = EditViewController(movieItem: movieItem)
+          detailViewController.delegate = self
+          navigationController?.pushViewController(detailViewController, animated: true)
+      }
     
+    func editViewControllerDidFinishEditing(_ editViewController: EditViewController) {
+           if navigationController?.visibleViewController == self {
+               backgroundImageView.isHidden = false
+           }
+       }
  //   private func updateInfo(title: String, overview: String) {
 //        guard let movieItem = movieItem
 //            let appDelegate = UIApplication.shared.delegate as? AppDelegate else {

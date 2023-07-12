@@ -11,6 +11,7 @@ class FavouritesViewController: UIViewController {
     
     private var titles: [MovieItem] = [MovieItem]()
 
+    private var isSearchActive = false
         // MARK: - UI
     private lazy var favouritesTable: UITableView = {
         let table = UITableView()
@@ -49,6 +50,7 @@ class FavouritesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         title = "Favourites"
+        view.backgroundColor = .systemBackground
         fetchLocalStorageForDownload()
     }
     
@@ -125,16 +127,18 @@ extension FavouritesViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension FavouritesViewController: UISearchResultsUpdating {
-
+    
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text, !searchText.isEmpty {
             let filteredTitles = titles.filter { title in
                 return title.original_name?.localizedCaseInsensitiveContains(searchText) ?? false ||
-                title.original_title?.localizedCaseInsensitiveContains(searchText) ?? false
+                    title.original_title?.localizedCaseInsensitiveContains(searchText) ?? false
             }
             self.titles = filteredTitles
+            isSearchActive = true
         } else {
             self.fetchLocalStorageForDownload()
+            isSearchActive = false
         }
         favouritesTable.reloadData()
     }
@@ -142,6 +146,8 @@ extension FavouritesViewController: UISearchResultsUpdating {
 
 extension FavouritesViewController: UISearchControllerDelegate {
     func didDismissSearchController(_ searchController: UISearchController) {
-        fetchLocalStorageForDownload()
+        if !isSearchActive {
+            fetchLocalStorageForDownload()
+        }
     }
 }

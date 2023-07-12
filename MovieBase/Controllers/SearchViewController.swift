@@ -92,20 +92,20 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let selectedMovie = self.titles[indexPath.row]
-        let detailViewController = DetailViewController()
-        
-        detailViewController.configureTitle(with: selectedMovie)
-        
-        if isSearchControllerActive {
-            searchController.dismiss(animated: true) {
+            tableView.deselectRow(at: indexPath, animated: true)
+            let selectedMovie = self.titles[indexPath.row]
+            let detailViewController = DetailViewController()
+            
+            detailViewController.configureTitle(with: selectedMovie)
+            
+            if isSearchControllerActive {
+                searchController.dismiss(animated: true) {
+                    self.navigationController?.pushViewController(detailViewController, animated: true)
+                }
+            } else {
                 self.navigationController?.pushViewController(detailViewController, animated: true)
             }
-        } else {
-            self.navigationController?.pushViewController(detailViewController, animated: true)
         }
-    }
 }
 
 extension SearchViewController: UISearchResultsUpdating {

@@ -7,8 +7,13 @@
 
 import UIKit
 
+protocol EditViewControllerDelegate: AnyObject {
+    func editViewControllerDidFinishEditing(_ editViewController: EditViewController)
+}
+
 class EditViewController: UIViewController {
 
+    weak var delegate: EditViewControllerDelegate?
      lazy var titleLabel: UITextView = {
         let label = UITextView()
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -42,9 +47,10 @@ class EditViewController: UIViewController {
     }()
     
     @objc private func editButtonTapped() {
-        updateInfo(movieItem: movieItem)
-        navigationController?.popViewController(animated: true)
-    }
+         updateInfo(movieItem: movieItem)
+         delegate?.editViewControllerDidFinishEditing(self)
+         navigationController?.popViewController(animated: true)
+     }
     //init
     private let movieItem: MovieItem
     
